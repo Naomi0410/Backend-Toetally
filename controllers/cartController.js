@@ -6,30 +6,41 @@ const addToCart = async (req, res) => {
     const { productId, quantity } = req.body;
     const userId = req.user.id;
 
+    console.log("Add to cart request:", { userId, productId, quantity });
+
+    if (!quantity || quantity <= 0) {
+      return res.status(400).json({ message: "Invalid quantity" });
+    }
+
     let cart = await Cart.findOne({ user: userId });
 
     if (!cart) {
+      console.log("Cart not found, creating a new one.");
       cart = new Cart({ user: userId, items: [] });
     }
 
     const existingItem = cart.items.find(
-      (item) => item.product.toString() === productId,
+      (item) => item.product.toString() === productId
     );
 
     if (existingItem) {
+      console.log("Item already exists in cart, updating quantity.");
       existingItem.quantity += quantity;
     } else {
+      console.log("Adding new item to cart.");
       cart.items.push({ product: productId, quantity });
     }
 
     await cart.save();
 
     const updatedCart = await Cart.findOne({ user: userId }).populate(
-      "items.product",
+      "items.product"
     );
 
+    console.log("Updated cart:", updatedCart);
     res.status(200).json(updatedCart);
   } catch (err) {
+    console.error("Error in addToCart:", err);
     res.status(500).json({ message: "Error adding to cart" });
   }
 };

@@ -94,7 +94,7 @@ app.use("/contact", contactRoutes);
 app.use("/subscribe", subscriberRoutes);
 
 const allowedOrigins = [
-  "https://toe-tally-bice.vercel.app/",
+  "https://toe-tally-phi.vercel.app/",
   "http://localhost:5173",
 ];
 

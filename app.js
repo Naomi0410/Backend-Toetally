@@ -87,6 +87,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.disable('etag');
 
 // Routes
 app.use("/contact", contactRoutes);
